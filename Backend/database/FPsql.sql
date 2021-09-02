@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `cart_items` (
   `quantity` int,
   `request` varchar(255),
   FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`),
-  FOREIGN KEY (`item_id`) REFERENCES `items` (`id`),
+  FOREIGN KEY (`item_id`) REFERENCES `items` (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `order` (
