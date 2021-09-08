@@ -1,15 +1,13 @@
 package models
 
-import "time"
-
 type Users struct {
-	ID          int       `json:"user_id"`
-	Username    string    `json:"username"`
-	Name        string    `json:"name"`
-	Password    string    `json:"-"`
-	UserType    string    `json:"-"`
-	Created_at  time.Time `json:"created_at"`
-	Updateed_at time.Time `json:"updated_at"`
+	ID         int    `json:"user_id"`
+	Username   string `json:"username"`
+	Name       string `json:"name"`
+	Password   string `json:"-"`
+	UserType   string `json:"-"`
+	Created_at string `json:"created_at"`
+	Updated_at string `json:"updated_at"`
 }
 
 type Address struct {
@@ -26,12 +24,12 @@ type MerchantDetails struct {
 }
 
 type Items struct {
-	ID         int       `json:"item_id"`
-	MerchantID int       `json:"merchant_id"`
-	Price      float32   `json:"price"`
-	Status     string    `json:"status"`
-	Created_at time.Time `json:"created_at"`
-	Updated_at time.Time `json:"updated_at"`
+	ID         int     `json:"item_id"`
+	MerchantID int     `json:"merchant_id"`
+	Price      float32 `json:"price"`
+	Status     string  `json:"status"`
+	Created_at string  `json:"created_at"`
+	Updated_at string  `json:"updated_at"`
 }
 
 type CartItems struct {
@@ -42,10 +40,11 @@ type CartItems struct {
 }
 
 type Order struct {
-	ID         int       `json:"order_id"`
-	UserID     int       `json:"user_id"`
-	Status     string    `json:"status"`
-	Created_at time.Time `json:"created_at"`
+	ID         int    `json:"order_id"`
+	UserID     int    `json:"user_id"`
+	Status     string `json:"status"`
+	Created_at string `json:"created_at"`
+	Updated_at string `json:"updated_at"`
 }
 
 type OrderItems struct {

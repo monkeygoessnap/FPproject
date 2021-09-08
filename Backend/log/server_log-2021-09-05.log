@@ -1,0 +1,3 @@
+WARNING: 2021/09/05 18:00:06 users.go:30: sql: database is closed
+WARNING: 2021/09/05 18:01:02 users.go:30: Error 1062: Duplicate entry 'user2' for key 'users.username'
+WARNING: 2021/09/05 18:06:07 users.go:15: sql: expected 7 destination arguments in Scan, not 1

@@ -42,7 +42,6 @@ func dsnStr() string {
 
 func InitDB() {
 	db, _ = sql.Open("mysql", dsnStr())
-	defer db.Close()
 	if err := db.Ping(); err != nil {
 		log.Info.Println(err)
 	} else {

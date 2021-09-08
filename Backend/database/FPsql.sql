@@ -23,11 +23,26 @@ CREATE TABLE IF NOT EXISTS `merchant_details` (
   FOREIGN KEY (`id`) REFERENCES `users` (`id`)
 );
 
+CREATE TABLE IF NOT EXISTS `health` (
+  `id` int,
+  `height` float,
+  `weight` float,
+  `age` int,
+  `bmi` float,
+  `active` ENUM (`low`,`moderate`,`high`),
+  `target_weight` float,
+  `target_bmi` float,
+  `target_cal` float,
+  `reset` varchar(4),
+  FOREIGN KEY (`id`) REFERENCES `users` (`id`)
+);
+
 CREATE TABLE IF NOT EXISTS `items` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `merchant_id` int,
   `price` float,
   `status` ENUM ('soldout', 'available'),
+  `calories` float,
   `created_at` datetime,
   `updated_at` timestamp,
   FOREIGN KEY (`merchant_id`) REFERENCES `users` (`id`)
@@ -37,6 +52,7 @@ CREATE TABLE IF NOT EXISTS `cart` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int,
   `created_at` datetime,
+  `updated_at` timestamp,
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
 
@@ -54,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `order` (
   `user_id` int,
   `status` ENUM ('pending', 'ready', 'done'),
   `created_at` datetime,
+  `updated_at` timestamp,
   FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 );
 
