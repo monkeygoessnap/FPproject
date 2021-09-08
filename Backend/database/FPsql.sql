@@ -1,3 +1,7 @@
+CREATE DATABASE IF NOT EXISTS `FP`;
+
+USE `FP`;
+
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `username` varchar(255) UNIQUE,
@@ -29,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `health` (
   `weight` float,
   `age` int,
   `bmi` float,
-  `active` ENUM (`low`,`moderate`,`high`),
+  `active` ENUM ('low', 'moderate', 'high'),
   `target_weight` float,
   `target_bmi` float,
   `target_cal` float,
@@ -40,6 +44,7 @@ CREATE TABLE IF NOT EXISTS `health` (
 CREATE TABLE IF NOT EXISTS `items` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `merchant_id` int,
+  `name` varchar(255),
   `price` float,
   `status` ENUM ('soldout', 'available'),
   `calories` float,
@@ -48,20 +53,13 @@ CREATE TABLE IF NOT EXISTS `items` (
   FOREIGN KEY (`merchant_id`) REFERENCES `users` (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `cart` (
+CREATE TABLE IF NOT EXISTS `cart_items` (
   `id` int PRIMARY KEY AUTO_INCREMENT,
   `user_id` int,
-  `created_at` datetime,
-  `updated_at` timestamp,
-  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-);
-
-CREATE TABLE IF NOT EXISTS `cart_items` (
-  `cart_id` int,
   `item_id` int,
   `quantity` int,
   `request` varchar(255),
-  FOREIGN KEY (`cart_id`) REFERENCES `cart` (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   FOREIGN KEY (`item_id`) REFERENCES `items` (`id`)
 );
 

@@ -3,57 +3,56 @@ package database
 import (
 	"FPproject/Backend/log"
 	"FPproject/Backend/models"
-	"fmt"
 	"time"
 )
 
 type DBuser struct {
-	*models.Users
+	models.Users
 }
 
 func GetAllUser() []DBuser {
 	var allUsers []DBuser
-	users := DBuser{
-		&models.Users{},
-	}
+	var user DBuser
 	rows, err := db.Query("SELECT * FROM users")
 	if err != nil {
 		log.Warning.Println(err)
 		return nil
 	}
 	for rows.Next() {
-		rows.Scan(&users.ID, &users.Username, &users.Name, &users.Password,
-			&users.UserType, &users.Created_at, &users.Updated_at)
-		allUsers = append(allUsers, users)
+		rows.Scan(&user.ID, &user.Username, &user.Name, &user.Password,
+			&user.UserType, &user.Created_at, &user.Updated_at)
+		allUsers = append(allUsers, user)
 	}
-	fmt.Println(allUsers)
 	return allUsers
 }
 
-func (u *DBuser) Get(id int) {
-	if err := db.QueryRow("SELECT * FROM users WHERE id=?", id).Scan(&u.ID, &u.Username, &u.Name, &u.Password, &u.UserType, &u.Created_at, &u.Updated_at); err != nil {
+func GetUser(id int) DBuser {
+	var user DBuser
+	if err := db.QueryRow("SELECT * FROM users WHERE id=?", id).Scan(&user.ID,
+		&user.Username, &user.Name, &user.Password, &user.UserType, &user.Created_at, &user.Updated_at); err != nil {
 		log.Warning.Println(err)
 	}
+	return user
 }
 
-func (u *DBuser) Delete(id int) {
+func DelUser(id int) {
 	_, err := db.Exec("DELETE FROM users WHERE id=?", id)
 	if err != nil {
 		log.Warning.Println(err)
 	}
 }
 
-func (u *DBuser) Create() {
+func AddUser(user DBuser) {
 	_, err := db.Exec("INSERT INTO users(username, full_name, password, type, created_at) VALUES (?,?,?,?,?)",
-		u.Username, u.Name, u.Password, u.UserType, time.Now())
+		user.Username, user.Name, user.Password, user.UserType, time.Now())
 	if err != nil {
 		log.Warning.Println(err)
 	}
 }
 
-func (u *DBuser) Update(id int) {
+func UpdateUser(user DBuser) {
 	_, err := db.Exec("UPDATE users SET full_name=?, password=?, type=?, updated_at=? WHERE id=?",
-		u.Name, u.Password, u.UserType, time.Now(), id)
+		user.Name, user.Password, user.UserType, time.Now(), user.ID)
 	if err != nil {
 		log.Warning.Println(err)
 	}

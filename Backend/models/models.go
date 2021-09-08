@@ -23,17 +23,33 @@ type MerchantDetails struct {
 	CloseTime string `json:"close_time"`
 }
 
+type Health struct {
+	ID        int     `json:"health_id"`
+	Height    float32 `json:"height"`
+	Weight    float32 `json:"weight"`
+	Age       int     `json:"age"`
+	BMI       float32 `json:"bmi"`
+	Active    string  `json:"active"`
+	TargetW   float32 `json:"target_weight"`
+	TargetBMI float32 `json:"target_bmi"`
+	TargetCal float32 `json:"target_cal"`
+	Reset     string  `json:"reset_time"`
+}
+
 type Items struct {
 	ID         int     `json:"item_id"`
 	MerchantID int     `json:"merchant_id"`
+	Name       string  `json:"name"`
 	Price      float32 `json:"price"`
 	Status     string  `json:"status"`
+	Calories   float32 `json:"calories"`
 	Created_at string  `json:"created_at"`
 	Updated_at string  `json:"updated_at"`
 }
 
 type CartItems struct {
-	CartID  int    `json:"cart_id"`
+	ID      int    `json:"id"`
+	UserID  int    `json:"user_id"`
 	ItemID  int    `json:"item_id"`
 	Qty     int    `json:"qty"`
 	Request string `json:"request"`
@@ -52,4 +68,8 @@ type OrderItems struct {
 	ItemID  int    `json:"item_id"`
 	Qty     int    `json:"qty"`
 	Request string `json:"request"`
+}
+
+type OtherRes struct {
+	Msg string `json:"msg"`
 }
