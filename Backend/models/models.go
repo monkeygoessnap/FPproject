@@ -1,73 +1,70 @@
 package models
 
-type Users struct {
-	ID         int    `json:"user_id"`
-	Username   string `json:"username"`
-	Name       string `json:"name"`
-	Password   string `json:"-"`
-	UserType   string `json:"-"`
-	Created_at string `json:"created_at"`
-	Updated_at string `json:"updated_at"`
+type Track struct {
+	Created string `json:"created"`
+	Updated string `json:"updated"`
+}
+
+type User struct {
+	ID       int    `json:"user_id"`
+	Username string `json:"username"`
+	Name     string `json:"name"`
+	Password string `json:"-"`
+	UserType string `json:"type"` //enum admin, merchant, customer
+	Track
 }
 
 type Address struct {
-	ID     int    `json:"add_id"`
+	ID     int    `json:"add_id"` //ref user.id
 	Postal string `json:"postal"`
 	Floor  string `json:"floor"`
 	Unit   string `json:"unit"`
+	Track
 }
 
-type MerchantDetails struct {
-	ID        int    `json:"merchant_id"`
-	OpenTime  string `json:"open_time"`
-	CloseTime string `json:"close_time"`
+type UserHealth struct {
+	ID     int     `json:"user_id"` //ref user.id
+	Gender string  `json:"gender"`  //enum male, female
+	Height float32 `json:"height"`  //metric cm
+	Weight float32 `json:"weight"`  //metric kg
+	DOB    int     `json:"dob"`     //ddmmyy format
+	Active string  `json:"active"`  //enum low, moderate, high
+	Target string  `json:"target"`  //enum gain, lose, maintain
+	Track
 }
 
-type Health struct {
-	ID        int     `json:"health_id"`
-	Height    float32 `json:"height"`
-	Weight    float32 `json:"weight"`
-	Age       int     `json:"age"`
-	BMI       float32 `json:"bmi"`
-	Active    string  `json:"active"`
-	TargetW   float32 `json:"target_weight"`
-	TargetBMI float32 `json:"target_bmi"`
-	TargetCal float32 `json:"target_cal"`
-	Reset     string  `json:"reset_time"`
+type Food struct {
+	ID          int     `json:"food_id"`
+	MerchantID  int     `json:"merchant_id"`
+	Name        string  `json:"name"`
+	Price       float32 `json:"price"`
+	Status      string  `json:"status"` //enum avail, soldout
+	Description string  `json:"description"`
+	ImgLink     string  `json:"imglink"` //image url
+	Track
 }
 
-type Items struct {
-	ID         int     `json:"item_id"`
-	MerchantID int     `json:"merchant_id"`
-	Name       string  `json:"name"`
-	Price      float32 `json:"price"`
-	Status     string  `json:"status"`
-	Calories   float32 `json:"calories"`
-	Created_at string  `json:"created_at"`
-	Updated_at string  `json:"updated_at"`
-}
-
-type CartItems struct {
-	ID      int    `json:"id"`
-	UserID  int    `json:"user_id"`
-	ItemID  int    `json:"item_id"`
+type CartItem struct {
+	Food
+	UserID  int    `json:"user_id"` //ref user.id
 	Qty     int    `json:"qty"`
-	Request string `json:"request"`
+	Remarks string `json:"remarks"`
+	Track
 }
 
 type Order struct {
-	ID         int    `json:"order_id"`
-	UserID     int    `json:"user_id"`
-	Status     string `json:"status"`
-	Created_at string `json:"created_at"`
-	Updated_at string `json:"updated_at"`
+	ID     int    `json:"order_id"`
+	UserID int    `json:"user_id"` //ref user.id
+	Status string `json:"status"`  //enum completed, pending
+	Track
 }
 
-type OrderItems struct {
-	OrderID int    `json:"order_id"`
-	ItemID  int    `json:"item_id"`
+type OrderItem struct {
+	Food
+	OrderID int    `json:"order_id"` //ref order_id
 	Qty     int    `json:"qty"`
-	Request string `json:"request"`
+	Remarks string `json:"remarks"`
+	Track
 }
 
 type OtherRes struct {
