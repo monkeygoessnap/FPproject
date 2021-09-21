@@ -3,55 +3,69 @@ package database
 import (
 	"FPproject/Backend/log"
 	"FPproject/Backend/models"
+	"time"
 )
 
-type DBadd struct {
-	models.Address
-}
-
-func GetAllAdd() []DBadd {
-	var allAdd []DBadd
-	var add DBadd
-	rows, err := db.Query("SELECT * FROM address")
+func (d *Database) InsertAdd(id string, add models.Address) (string, error) {
+	res, err := d.db.Exec("INSERT INTO address(id, postal, floor, unit, created, updated) VALUES(?,?,?,?,?,?)",
+		id, add.Postal, add.Floor, add.Unit, time.Now(), time.Now())
 	if err != nil {
 		log.Warning.Println(err)
-		return nil
+		return "", err
 	}
-	for rows.Next() {
-		rows.Scan(&add.ID, &add.Postal, &add.Floor, &add.Unit)
-		allAdd = append(allAdd, add)
-	}
-	return allAdd
-}
-
-func GetAdd(id int) DBadd {
-	var add DBadd
-	if err := db.QueryRow("SELECT * FROM address WHERE id=?", id).Scan(&add.ID,
-		&add.Postal, &add.Floor, &add.Unit); err != nil {
-		log.Warning.Println(err)
-	}
-	return add
-}
-
-func DelAdd(id int) {
-	_, err := db.Exec("DELETE FROM address WHERE id=?", id)
+	affected, err := res.RowsAffected()
 	if err != nil {
 		log.Warning.Println(err)
+		return "", err
+	} else if affected < 1 {
+		log.Warning.Println(ErrNoRowsAffected)
+		return "", ErrNoRowsAffected
 	}
+	return id, nil
 }
 
-func AddAdd(add DBadd) {
-	_, err := db.Exec("INSERT INTO address(id, postal, floor, unit) VALUES (?,?,?,?)",
-		add.ID, add.Postal, add.Floor, add.Unit)
+func (d *Database) DelAdd(id string) (string, error) {
+	res, err := d.db.Exec("DELETE FROM address WHERE id=?", id)
 	if err != nil {
 		log.Warning.Println(err)
+		return "", err
 	}
+	affected, err := res.RowsAffected()
+	if err != nil {
+		log.Warning.Println(err)
+		return "", err
+	} else if affected < 1 {
+		log.Warning.Println(ErrNoRowsAffected)
+		return "", ErrNoRowsAffected
+	}
+	return id, nil
 }
 
-func UpdateAdd(add DBadd) {
-	_, err := db.Exec("UPDATE address SET postal=?, floor=?, unit=? WHERE id=?",
-		add.Postal, add.Floor, add.Unit, add.ID)
+func (d *Database) UpdateAdd(add models.Address) (string, error) {
+	res, err := d.db.Exec("UPDATE address SET postal=?, floor=?, unit=?, updated=? WHERE id=?",
+		add.Postal, add.Floor, add.Unit, time.Now(), add.ID)
 	if err != nil {
 		log.Warning.Println(err)
+		return "", err
 	}
+	affected, err := res.RowsAffected()
+	if err != nil {
+		log.Warning.Println(err)
+		return "", err
+	} else if affected < 1 {
+		log.Warning.Println(ErrNoRowsAffected)
+		return "", ErrNoRowsAffected
+	}
+	return add.ID, nil
+}
+
+func (d *Database) GetAdd(id string) (models.Address, error) {
+	var add models.Address
+	err := d.db.QueryRow("SELECT * FROM address WHERE id=?", id).Scan(&add.ID,
+		&add.Postal, &add.Floor, &add.Unit, &add.Created, &add.Updated)
+	if err != nil {
+		log.Warning.Println(err)
+		return add, err
+	}
+	return add, nil
 }

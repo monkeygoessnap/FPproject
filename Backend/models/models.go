@@ -6,16 +6,16 @@ type Track struct {
 }
 
 type User struct {
-	ID       int    `json:"user_id"`
+	ID       string `json:"user_id"`
 	Username string `json:"username"`
 	Name     string `json:"name"`
-	Password string `json:"-"`
+	Password string `json:"password"`
 	UserType string `json:"type"` //enum admin, merchant, customer
 	Track
 }
 
 type Address struct {
-	ID     int    `json:"add_id"` //ref user.id
+	ID     string `json:"add_id"` //ref user.id
 	Postal string `json:"postal"`
 	Floor  string `json:"floor"`
 	Unit   string `json:"unit"`
@@ -23,19 +23,19 @@ type Address struct {
 }
 
 type UserHealth struct {
-	ID     int     `json:"user_id"` //ref user.id
+	ID     string  `json:"user_id"` //ref user.id
 	Gender string  `json:"gender"`  //enum male, female
 	Height float32 `json:"height"`  //metric cm
 	Weight float32 `json:"weight"`  //metric kg
-	DOB    int     `json:"dob"`     //ddmmyy format
+	DOB    string  `json:"dob"`     //ddmmyy format
 	Active string  `json:"active"`  //enum low, moderate, high
 	Target string  `json:"target"`  //enum gain, lose, maintain
 	Track
 }
 
-type Food struct {
-	ID          int     `json:"food_id"`
-	MerchantID  int     `json:"merchant_id"`
+type Food struct { //need getall
+	ID          string  `json:"food_id"`
+	MerchantID  string  `json:"merchant_id"` //ref user.id
 	Name        string  `json:"name"`
 	Price       float32 `json:"price"`
 	Status      string  `json:"status"` //enum avail, soldout
@@ -44,28 +44,30 @@ type Food struct {
 	Track
 }
 
-type CartItem struct {
-	Food
-	UserID  int    `json:"user_id"` //ref user.id
+type CartItem struct { //need getall
+	ID      string `json:"food_id"` //ref food.id
+	UserID  string `json:"user_id"` //ref user.id
 	Qty     int    `json:"qty"`
 	Remarks string `json:"remarks"`
 	Track
 }
 
-type Order struct {
-	ID     int    `json:"order_id"`
-	UserID int    `json:"user_id"` //ref user.id
-	Status string `json:"status"`  //enum completed, pending
-	Track
-}
+//Program only until Cart
 
-type OrderItem struct {
-	Food
-	OrderID int    `json:"order_id"` //ref order_id
-	Qty     int    `json:"qty"`
-	Remarks string `json:"remarks"`
-	Track
-}
+// type Order struct { //need getall
+// 	ID     string `json:"order_id"`
+// 	UserID string `json:"user_id"` //ref user.id
+// 	Status string `json:"status"`  //enum completed, pending
+// 	Track
+// }
+
+// type OrderItem struct { //need getall
+// 	Food
+// 	OrderID string `json:"order_id"` //ref order_id
+// 	Qty     int `json:"qty"`
+// 	Remarks string `json:"remarks"`
+// 	Track
+// }
 
 type OtherRes struct {
 	Msg string `json:"msg"`

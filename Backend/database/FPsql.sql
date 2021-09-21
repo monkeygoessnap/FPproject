@@ -3,27 +3,27 @@ CREATE DATABASE IF NOT EXISTS `FP`;
 USE `FP`;
 
 CREATE TABLE IF NOT EXISTS `user` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `id` varchar(36) PRIMARY KEY,
   `username` varchar(255) UNIQUE,
   `name` varchar(255),
   `password` varchar(100),
   `type` ENUM ('admin', 'merchant', 'customer'),
   `created` datetime,
-  `updated` timestamp
+  `updated` datetime
 );
 
 CREATE TABLE IF NOT EXISTS `address` (
-  `id` int,
+  `id` varchar(36) PRIMARY KEY,
   `postal` varchar(6),
   `floor` varchar(3),
   `unit` varchar(9),
   `created` datetime,
-  `updated` timestamp,
+  `updated` datetime,
   FOREIGN KEY (`id`) REFERENCES `user` (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `userhealth` (
-  `id` int,
+  `id` varchar(36) PRIMARY KEY,
   `gender` ENUM ('male', 'female'),
   `height` float,
   `weight` float,
@@ -31,55 +31,55 @@ CREATE TABLE IF NOT EXISTS `userhealth` (
   `active` ENUM ('low', 'moderate', 'high'),
   `target` ENUM ('gain', 'lose', 'maintain'),
   `created` datetime,
-  `updated` timestamp,
+  `updated` datetime,
   FOREIGN KEY (`id`) REFERENCES `user` (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `food` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `merchant_id` int,
+  `id` varchar(36) PRIMARY KEY,
+  `merchant_id` varchar(36),
   `name` varchar(255),
   `price` float,
   `status` ENUM ('avail', 'soldout'),
   `description` varchar(255),
   `imglink` varchar(255),
   `created` datetime,
-  `updated` timestamp,
+  `updated` datetime,
   FOREIGN KEY (`merchant_id`) REFERENCES `user` (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `cart_items` (
-  `item_id` int,
-  `user_id` int,
+CREATE TABLE IF NOT EXISTS `cart_item` (
+  `item_id` varchar(36) PRIMARY KEY,
+  `user_id` varchar(36),
   `qty` int,
   `remarks` varchar(255),
   `created` datetime,
-  `updated` timestamp,
+  `updated` datetime,
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
   FOREIGN KEY (`item_id`) REFERENCES `food` (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `order` (
-  `id` int PRIMARY KEY AUTO_INCREMENT,
-  `user_id` int,
+  `id` varchar(36) PRIMARY KEY,
+  `user_id` varchar(36),
   `status` ENUM ('pending', 'completed'),
   `created` datetime,
-  `updated` timestamp,
+  `updated` datetime,
   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `order_items` (
-  `food_id` int,
-  `merchant_id` int,
+CREATE TABLE IF NOT EXISTS `order_item` (
+  `food_id` varchar(36) PRIMARY KEY,
+  `merchant_id` varchar(36),
   `name` varchar(255),
   `price` float,
   `description` varchar(255),
   `imglink` varchar(255),
-  `order_id` int,
+  `order_id` varchar(36),
   `qty` int,
   `remarks` varchar(255),
   `created` datetime,
-  `updated` timestamp,
+  `updated` datetime,
   FOREIGN KEY (`merchant_id`) REFERENCES `user` (`id`),
   FOREIGN KEY (`food_id`) REFERENCES `food` (`id`),
   FOREIGN KEY (`order_id`) REFERENCES `order` (`id`)
