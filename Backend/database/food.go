@@ -72,3 +72,21 @@ func (d *Database) GetFood(id string) (models.Food, error) {
 	}
 	return f, nil
 }
+
+func (d *Database) GetFoodByMerchant(id string) ([]models.Food, error) {
+	var food models.Food
+	var foods []models.Food
+	r, err := d.db.Query("SELECT * FROM food WHERE merchant_id=?", id)
+	if err != nil {
+		log.Warning.Println(err)
+		return nil, err
+	}
+	for r.Next() {
+		if err := r.Scan(&food.ID, &food.MerchantID, &food.Name, &food.Price, &food.Status, &food.Description, &food.ImgLink, &food.Created, &food.Updated); err != nil {
+			log.Warning.Println(err)
+			return nil, err
+		}
+		foods = append(foods, food)
+	}
+	return foods, nil
+}

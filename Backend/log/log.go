@@ -28,7 +28,8 @@ func InitLog() {
 	}
 	//formats the different log types
 	Info = log.New(os.Stdout, "INFO: ", log.Ldate|log.Ltime|log.Lshortfile)
-	Warning = log.New(io.MultiWriter(file, os.Stderr), "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
+	Warning = log.New(io.MultiWriter(file, os.Stderr, "WARNING: ", log.Ldate|log.Ltime|log.Lshortfile)
+	// /var/log/service_name/*.log
 	Error = log.New(io.MultiWriter(file, os.Stderr), "ERROR: ", log.Ldate|log.Ltime|log.Lshortfile)
 
 }

@@ -36,14 +36,20 @@ type repository interface {
 	GetCI(id string) (models.CartItem, error)
 }
 
+//type logger interface{
+//log function
+//}
+
 type Handler struct {
 	db repository
+	//log logger
 }
 
 //passes dependency
 func handler(db repository) *Handler {
 	return &Handler{
 		db: db,
+		//log:logger
 	}
 }
 

@@ -69,3 +69,21 @@ func (d *Database) GetCI(id string) (models.CartItem, error) {
 	}
 	return ci, nil
 }
+
+func (d *Database) GetCIByUser(id string) ([]models.CartItem, error) {
+	var ci models.CartItem
+	var cis []models.CartItem
+	r, err := d.db.Query("SELECT * FROM cart_item WHERE user_id=?", id)
+	if err != nil {
+		log.Warning.Println(err)
+		return nil, err
+	}
+	for r.Next() {
+		if err := r.Scan(&ci.ID, &ci.UserID, &ci.Qty, &ci.Remarks, &ci.Created, &ci.Updated); err != nil {
+			log.Warning.Println(err)
+			return nil, err
+		}
+		cis = append(cis, ci)
+	}
+	return cis, nil
+}

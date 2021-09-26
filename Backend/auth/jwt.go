@@ -4,7 +4,6 @@ Package auth provides the authentication middleware for the mux router
 package auth
 
 import (
-	"FPproject/Backend/models"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -25,19 +24,19 @@ func AuthJWT(next http.Handler) http.Handler {
 			//[]byte containing secret, e.g. []byte("my_secret_key")
 			return []byte(key), nil
 		})
-		var res models.OtherRes
+		//var res models.OtherRes
 		if err != nil {
-			res.Msg = "unexpected signing method"
+			//res.Msg = "unexpected signing method"
 			w.WriteHeader(http.StatusInternalServerError)
-			json.NewEncoder(w).Encode(res)
+			json.NewEncoder(w).Encode(`{"status":"internal server error"}`)
 			return
 		}
 		if token.Valid {
 			next.ServeHTTP(w, r)
 		} else {
-			res.Msg = "Not Authorized"
+			//res.Msg = "Not Authorized"
 			w.WriteHeader(http.StatusForbidden)
-			json.NewEncoder(w).Encode(res)
+			json.NewEncoder(w).Encode(`{"status":"forbidden"}`)
 		}
 	})
 }
