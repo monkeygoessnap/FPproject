@@ -1,6 +1,7 @@
 package server
 
 import (
+	"FPproject/Backend/auth"
 	"FPproject/Backend/database"
 	"FPproject/Backend/models"
 	"net/http"
@@ -10,10 +11,12 @@ import (
 
 //must be same as database user functions
 type repository interface {
+	Validate(um, pw string) (models.User, error)
 	InsertUser(user models.User) (string, error)
 	DelUser(id string) (string, error)
 	UpdateUser(user models.User) (string, error)
 	GetUser(id string) (models.User, error)
+	GetMerchants() ([]models.User, error)
 
 	InsertAdd(id string, add models.Address) (string, error)
 	DelAdd(id string) (string, error)
@@ -29,11 +32,13 @@ type repository interface {
 	DelFood(id string) (string, error)
 	UpdateFood(f models.Food) (string, error)
 	GetFood(id string) (models.Food, error)
+	GetFoodByMerchant(id string) ([]models.Food, error)
 
 	InsertCI(ci models.CartItem) (string, error)
 	DelCI(id string) (string, error)
 	UpdateCI(f models.CartItem) (string, error)
 	GetCI(id string) (models.CartItem, error)
+	GetCIByUser(id string) ([]models.CartItem, error)
 }
 
 //type logger interface{
@@ -60,6 +65,9 @@ func Healthcheck(c *gin.Context) {
 }
 
 func InitServer() {
+
+	apiVersion := "/api/v1"
+
 	router := gin.Default()
 	db := connectDB()
 	defer db.Close()
@@ -67,34 +75,44 @@ func InitServer() {
 	r := database.New(db)
 	h := handler(r)
 
-	router.GET("/healthcheck", Healthcheck)
+	//unauthenticated routes
+	public := router.Group(apiVersion)
 
-	router.POST("/user", h.InsertUser)
-	router.DELETE("/user/:id", h.DelUser)
-	router.GET("/user/:id", h.GetUser)
-	router.PUT("/user/:id", h.UpdateUser)
+	public.GET("/healthcheck", Healthcheck)
+	public.POST("/login", h.Login)
+	public.POST("/register", h.InsertUser)
 
-	router.POST("/add/:id", h.InsertAdd)
-	router.DELETE("/add/:id", h.DelAdd)
-	router.GET("/add/:id", h.GetAdd)
-	router.PUT("/add/:id", h.UpdateAdd)
+	//authenticated routes
+	private := router.Group(apiVersion)
+	private.Use(auth.AuthJWT())
 
-	router.POST("/uh/:id", h.InsertUH)
-	router.DELETE("/uh/:id", h.DelUH)
-	router.GET("/uh/:id", h.GetUH)
-	router.PUT("/uh/:id", h.UpdateUH)
+	private.DELETE("/user", h.DelUser)
+	private.GET("/user", h.GetUser)
+	private.PUT("/user", h.UpdateUser)
+	private.GET("/merc", h.GetMerchants)
 
-	router.POST("/food", h.InsertFood)
-	router.DELETE("/food/:id", h.DelFood)
-	router.GET("/food/:id", h.GetFood)
-	router.PUT("/food/:id", h.UpdateFood)
-	//custom getall TODO
+	private.POST("/add", h.InsertAdd)
+	private.DELETE("/add", h.DelAdd)
+	private.GET("/add", h.GetAdd)
+	private.PUT("/add", h.UpdateAdd)
+	private.GET("/mercadd/:id", h.GetMercAdd)
 
-	router.POST("/ci", h.InsertCI)
-	router.DELETE("/ci/:id", h.DelCI)
-	router.GET("/ci/:id", h.GetCI)
-	router.PUT("/ci/:id", h.UpdateCI)
-	//custom getall TODO
+	private.POST("/uh", h.InsertUH)
+	private.DELETE("/uh", h.DelUH)
+	private.GET("/uh", h.GetUH)
+	private.PUT("/uh", h.UpdateUH)
+
+	private.POST("/food", h.InsertFood)
+	private.DELETE("/food/:id", h.DelFood)
+	private.GET("/food/:id", h.GetFood)
+	private.PUT("/food/:id", h.UpdateFood)
+	private.GET("/allfood/:id", h.GetFoodByMerchant)
+
+	private.POST("/ci", h.InsertCI)
+	private.DELETE("/ci/:id", h.DelCI)
+	private.GET("/ci/:id", h.GetCI)
+	private.PUT("/ci/:id", h.UpdateCI)
+	private.GET("/allci/:id", h.GetCIByUser)
 
 	router.Run()
 }

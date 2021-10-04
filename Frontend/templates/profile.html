@@ -1,0 +1,68 @@
+{{template "head"}}
+{{template "navbar_user"}}
+{{template "body"}}
+
+<div text-align="center" style="width:50%;margin:auto">
+        <p>
+            <h2 style="color:darkcyan"><i class="fas fa-user"></i> Profile</h2>
+            {{$user := index . 0}}
+            {{$add := index . 1}}
+            {{$health := index . 2}}
+            <form>
+                <h5 style="color:rgb(207, 0, 197)">Credentials</h5>
+                <div class="form-group">
+                    Username<input autocomplete="off" class="form-control" name ="username" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$user.Username}}>
+                </div>
+                <div class="form-group">
+                    Name<input autocomplete="off" class="form-control" name ="name" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$user.Name}}>
+                </div>
+                <hr>
+                <h5 style="color:rgb(207, 0, 197)">Address</h5>
+                <div class="form-group">
+                    Postal<input autocomplete="off" class="form-control" name ="postal" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$add.Postal}}>
+                </div>
+                <div class="form-group">
+                    Floor<input autocomplete="off" class="form-control" name ="floor" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$add.Floor}}>
+                </div>
+                <div class="form-group">
+                    Unit<input autocomplete="off" class="form-control" name ="unit" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$add.Unit}}>
+                </div>
+                <hr>
+                {{if eq $user.UserType "customer"}}
+                <h5 style="color:rgb(207, 0, 197)">Health Settings</h5>
+                <div class="form-group">
+                    Gender<input autocomplete="off" class="form-control" name ="gender" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$health.Gender}}>
+                </div>
+                <div class="form-group">
+                    Height<input autocomplete="off" class="form-control" name ="height" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$health.Height}}>
+                </div>
+                <div class="form-group">
+                    Weight<input autocomplete="off" class="form-control" name ="weight" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$health.Weight}}>
+                </div>
+                <div class="form-group">
+                    Date of birth<input autocomplete="off" class="form-control" name ="dob" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$health.DOB}}>
+                </div>
+                <div class="form-group">
+                    Activeness<input autocomplete="off" class="form-control" name ="active" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$health.Active}}>
+                </div>
+                <div class="form-group">
+                    Weight Goal<input autocomplete="off" class="form-control" name ="target" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    disabled value={{$health.Target}}>
+                </div>
+                {{end}}
+            </form>
+            <a href="/editprofile" class="btn btn-info" style="text-align:center">Edit</a>
+        </p>
+</div>
+
+{{template "footer"}}

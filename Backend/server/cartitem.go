@@ -34,13 +34,6 @@ func (h *Handler) InsertCI(c *gin.Context) {
 
 func (h *Handler) DelCI(c *gin.Context) {
 	foodid := c.Param("id")
-	if !verifyID() {
-		log.Info.Println("Unauthorized Del", foodid)
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": "unauthorized",
-		})
-		return
-	}
 	id, err := h.db.DelCI(foodid)
 	if err != nil {
 		log.Warning.Println(err)
@@ -57,13 +50,6 @@ func (h *Handler) DelCI(c *gin.Context) {
 
 func (h *Handler) GetCI(c *gin.Context) {
 	foodid := c.Param("id")
-	if !verifyID() {
-		log.Info.Println("Unauthorized Get", foodid)
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": "unauthorized",
-		})
-		return
-	}
 	var body models.CartItem
 	body, err := h.db.GetCI(foodid)
 	if err != nil {
@@ -76,15 +62,21 @@ func (h *Handler) GetCI(c *gin.Context) {
 	c.JSON(http.StatusOK, body)
 }
 
-func (h *Handler) UpdateCI(c *gin.Context) {
-	foodid := c.Param("id")
-	if !verifyID() {
-		log.Info.Println("Unauthorized Del", foodid)
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": "unauthorized",
+func (h *Handler) GetCIByUser(c *gin.Context) {
+	userid := c.Param("id")
+	var body []models.CartItem
+	body, err := h.db.GetCIByUser(userid)
+	if err != nil {
+		log.Warning.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": "internal server error",
 		})
 		return
 	}
+	c.JSON(http.StatusOK, body)
+}
+
+func (h *Handler) UpdateCI(c *gin.Context) {
 	var body models.CartItem
 	err := c.BindJSON(&body)
 	if err != nil {

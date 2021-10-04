@@ -1,0 +1,79 @@
+{{template "head"}}
+{{template "navbar_user"}}
+{{template "body"}}
+
+<div text-align="center" style="width:50%;margin:auto">
+        <p>
+            <h2 style="color:darkcyan"><i class="fas fa-user"></i> Profile</h2>
+            <form method="POST">
+                {{$user := index . 0}}
+                {{$add := index . 1}}
+                {{$health := index . 2}}
+                <h5 style="color:rgb(207, 0, 197)">Credentials</h5>
+                <div class="form-group">
+                    Username<input autocomplete="off" class="form-control" name ="username" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    value={{$user.Username}} disabled>
+                </div>
+                <div class="form-group">
+                    Name<input autocomplete="off" class="form-control" name ="name" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    value={{$user.Name}} required>
+                </div>
+                <hr>
+                <h5 style="color:rgb(207, 0, 197)">Address</h5>
+                <div class="form-group">
+                    Postal<input autocomplete="off" class="form-control" name ="postal" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    value={{$add.Postal}}>
+                </div>
+                <div class="form-group">
+                    Floor<input autocomplete="off" class="form-control" name ="floor" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    value={{$add.Floor}}>
+                </div>
+                <div class="form-group">
+                    Unit<input autocomplete="off" class="form-control" name ="unit" placeholder="" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    value={{$add.Unit}}>
+                </div>
+                <hr>
+                {{if eq $user.UserType "customer"}}
+                <h5 style="color:rgb(207, 0, 197)">Health Settings</h5>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="male" {{if eq $health.Gender "male"}}selected{{end}}>Male</option>
+                        <option value="female" {{if eq $health.Gender "female"}}selected{{end}}>Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    Height<input autocomplete="off" class="form-control" name ="height" placeholder="in cm" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    value={{$health.Height}}>
+                </div>
+                <div class="form-group">
+                    Weight<input autocomplete="off" class="form-control" name ="weight" placeholder="in kg" type="text" pattern="^[a-zA-Z0-9 ]+$" title="Only Alphanumerical Allowed"
+                    value={{$health.Weight}}>
+                </div>
+                <div class="form-group">
+                    Date of birth<input autocomplete="off" class="form-control" name ="dob" placeholder="ddmmyy" type="text" pattern="^[a-zA-Z0-9/ ]+$" title="Only Alphanumerical Allowed"
+                    value={{$health.DOB}}>
+                </div>
+                <div class="form-group">
+                    <label for="active">Activeness:</label>
+                    <select id="active" name="active" required>
+                        <option value="low" {{if eq $health.Active "low"}}selected{{end}}>Not active</option>
+                        <option value="moderate" {{if eq $health.Active "moderate"}}selected{{end}}>Moderate Active</option>
+                        <option value="high" {{if eq $health.Active "high"}}selected{{end}}>Active</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="target">Weight Goal:</label>
+                    <select id="target" name="target" required>
+                        <option value="lose" {{if eq $health.Target "lose"}}selected{{end}}>Lose Weight</option>
+                        <option value="gain" {{if eq $health.Target "gain"}}selected{{end}}>Gain Weight</option>
+                        <option value="maintain" {{if eq $health.Target "maintain"}}selected{{end}}>Maintain Weight</option>
+                    </select>
+                </div>
+                {{end}}
+            <button id="btn" type="submit">Submit</button>
+            </form>
+        </p>
+</div>
+
+{{template "footer"}}

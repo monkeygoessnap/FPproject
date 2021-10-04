@@ -1,0 +1,74 @@
+{{template "head"}}
+{{template "navbar_user"}}
+{{template "body"}}
+
+<script>
+    function searchFunc() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }       
+      }
+    }
+    </script>
+
+<div text-align="center">
+    {{$merc := index . 0}}
+    {{$add := index . 1}}
+
+    <h2 style="color:darkcyan">{{$merc}}</h2>
+    <h4 style="color:darkcyan">Address</h4>
+    Postal: {{$add.Postal}}<br>
+    Floor: {{$add.Floor}}<br>
+    Unit: {{$add.Unit}}<br>
+
+    <i class="fas fa-search"></i><input style="width:100%;text-align:center" type="text" id="myInput" onkeyup="searchFunc()" placeholder="Search">
+
+    <table class="table table-hover" id="myTable">
+        <thead>
+          <tr>
+            <th scope="col">Img</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Description</th>
+            <th scope="col">Status</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+            {{range $item := index . 2}}
+            <tr>
+                <td>{{$item.ImgLink}}</th>
+                <td>{{$item.Name}}</td>
+                <td>{{$item.Price | printf "$%.2f"}}</td>
+                <td>{{$item.Description}}</td>
+                <td>{{$item.Status}}</td>
+                <td>
+                    <form method="POST">
+                        {{if ne $item.Status "soldout"}}
+                        <button class="btn btn-info" type="submit" value={{$item.ID}} name="add">Add to Cart</button>
+                        {{end}}
+                    </form>
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+      </table>
+
+
+
+</div>
+
+{{template "footer"}}

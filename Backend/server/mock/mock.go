@@ -139,6 +139,21 @@ func (mr *MockrepositoryMockRecorder) GetCI(id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCI", reflect.TypeOf((*Mockrepository)(nil).GetCI), id)
 }
 
+// GetCIByUser mocks base method.
+func (m *Mockrepository) GetCIByUser(id string) ([]models.CartItem, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetCIByUser", id)
+	ret0, _ := ret[0].([]models.CartItem)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetCIByUser indicates an expected call of GetCIByUser.
+func (mr *MockrepositoryMockRecorder) GetCIByUser(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCIByUser", reflect.TypeOf((*Mockrepository)(nil).GetCIByUser), id)
+}
+
 // GetFood mocks base method.
 func (m *Mockrepository) GetFood(id string) (models.Food, error) {
 	m.ctrl.T.Helper()
@@ -152,6 +167,21 @@ func (m *Mockrepository) GetFood(id string) (models.Food, error) {
 func (mr *MockrepositoryMockRecorder) GetFood(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFood", reflect.TypeOf((*Mockrepository)(nil).GetFood), id)
+}
+
+// GetFoodByMerchant mocks base method.
+func (m *Mockrepository) GetFoodByMerchant(id string) ([]models.Food, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFoodByMerchant", id)
+	ret0, _ := ret[0].([]models.Food)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFoodByMerchant indicates an expected call of GetFoodByMerchant.
+func (mr *MockrepositoryMockRecorder) GetFoodByMerchant(id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFoodByMerchant", reflect.TypeOf((*Mockrepository)(nil).GetFoodByMerchant), id)
 }
 
 // GetUH mocks base method.
@@ -332,4 +362,19 @@ func (m *Mockrepository) UpdateUser(user models.User) (string, error) {
 func (mr *MockrepositoryMockRecorder) UpdateUser(user interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateUser", reflect.TypeOf((*Mockrepository)(nil).UpdateUser), user)
+}
+
+// Validate mocks base method.
+func (m *Mockrepository) Validate(um, pw string) (models.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Validate", um, pw)
+	ret0, _ := ret[0].(models.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Validate indicates an expected call of Validate.
+func (mr *MockrepositoryMockRecorder) Validate(um, pw interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Validate", reflect.TypeOf((*Mockrepository)(nil).Validate), um, pw)
 }

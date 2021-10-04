@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `id` varchar(36) PRIMARY KEY,
   `username` varchar(255) UNIQUE,
   `name` varchar(255),
-  `password` varchar(100),
+  `password` varchar(255),
   `type` ENUM ('admin', 'merchant', 'customer'),
   `created` datetime,
   `updated` datetime
@@ -24,12 +24,12 @@ CREATE TABLE IF NOT EXISTS `address` (
 
 CREATE TABLE IF NOT EXISTS `userhealth` (
   `id` varchar(36) PRIMARY KEY,
-  `gender` ENUM ('male', 'female'),
+  `gender` varchar(10), 
   `height` float,
   `weight` float,
   `dob` varchar(6),
-  `active` ENUM ('low', 'moderate', 'high'),
-  `target` ENUM ('gain', 'lose', 'maintain'),
+  `active` varchar(10), 
+  `target` varchar(10),
   `created` datetime,
   `updated` datetime,
   FOREIGN KEY (`id`) REFERENCES `user` (`id`)
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `food` (
   `merchant_id` varchar(36),
   `name` varchar(255),
   `price` float,
-  `status` ENUM ('avail', 'soldout'),
+  `status` varchar(10),
   `description` varchar(255),
   `imglink` varchar(255),
   `created` datetime,
@@ -59,38 +59,39 @@ CREATE TABLE IF NOT EXISTS `cart_item` (
   FOREIGN KEY (`item_id`) REFERENCES `food` (`id`)
 );
 
-CREATE TABLE IF NOT EXISTS `order` (
-  `id` varchar(36) PRIMARY KEY,
-  `user_id` varchar(36),
-  `status` ENUM ('pending', 'completed'),
-  `created` datetime,
-  `updated` datetime,
-  FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-);
-
-CREATE TABLE IF NOT EXISTS `order_item` (
-  `food_id` varchar(36) PRIMARY KEY,
-  `merchant_id` varchar(36),
-  `name` varchar(255),
-  `price` float,
-  `description` varchar(255),
-  `imglink` varchar(255),
-  `order_id` varchar(36),
-  `qty` int,
-  `remarks` varchar(255),
-  `created` datetime,
-  `updated` datetime,
-  FOREIGN KEY (`merchant_id`) REFERENCES `user` (`id`),
-  FOREIGN KEY (`food_id`) REFERENCES `food` (`id`),
-  FOREIGN KEY (`order_id`) REFERENCES `order` (`id`)
-);
-
 CREATE TABLE IF NOT EXISTS `sgfood` (
   `ID` int PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
   `serving` varchar(20),
   `calories` int
 );
+
+-- CREATE TABLE IF NOT EXISTS `order` (
+--   `id` varchar(36) PRIMARY KEY,
+--   `user_id` varchar(36),
+--   `status` ENUM ('pending', 'completed'),
+--   `created` datetime,
+--   `updated` datetime,
+--   FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
+-- );
+
+-- CREATE TABLE IF NOT EXISTS `order_item` (
+--   `food_id` varchar(36) PRIMARY KEY,
+--   `merchant_id` varchar(36),
+--   `name` varchar(255),
+--   `price` float,
+--   `description` varchar(255),
+--   `imglink` varchar(255),
+--   `order_id` varchar(36),
+--   `qty` int,
+--   `remarks` varchar(255),
+--   `created` datetime,
+--   `updated` datetime,
+--   FOREIGN KEY (`merchant_id`) REFERENCES `user` (`id`),
+--   FOREIGN KEY (`food_id`) REFERENCES `food` (`id`),
+--   FOREIGN KEY (`order_id`) REFERENCES `order` (`id`)
+-- );
+
 
 -- LOAD CSV FILE INTO DB
 

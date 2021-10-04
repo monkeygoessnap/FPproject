@@ -18,8 +18,7 @@ func (h *Handler) InsertUH(c *gin.Context) {
 		})
 		return
 	}
-	//use params first then next commit maybe change to JWT ID header
-	userid := c.Param("id")
+	userid := c.Keys["ID"].(string)
 	id, err := h.db.InsertUH(userid, body)
 	if err != nil {
 		log.Warning.Println(err)
@@ -35,14 +34,7 @@ func (h *Handler) InsertUH(c *gin.Context) {
 }
 
 func (h *Handler) DelUH(c *gin.Context) {
-	userid := c.Param("id")
-	if !verifyID() {
-		log.Info.Println("Unauthorized Del", userid)
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": "unauthorized",
-		})
-		return
-	}
+	userid := c.Keys["ID"].(string)
 	id, err := h.db.DelUH(userid)
 	if err != nil {
 		log.Warning.Println(err)
@@ -58,14 +50,7 @@ func (h *Handler) DelUH(c *gin.Context) {
 }
 
 func (h *Handler) GetUH(c *gin.Context) {
-	userid := c.Param("id")
-	if !verifyID() {
-		log.Info.Println("Unauthorized Get", userid)
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": "unauthorized",
-		})
-		return
-	}
+	userid := c.Keys["ID"].(string)
 	var body models.UserHealth
 	body, err := h.db.GetUH(userid)
 	if err != nil {
@@ -79,16 +64,10 @@ func (h *Handler) GetUH(c *gin.Context) {
 }
 
 func (h *Handler) UpdateUH(c *gin.Context) {
-	userid := c.Param("id")
-	if !verifyID() {
-		log.Info.Println("Unauthorized Del", userid)
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": "unauthorized",
-		})
-		return
-	}
+
 	var body models.UserHealth
 	err := c.BindJSON(&body)
+
 	if err != nil {
 		log.Info.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -96,6 +75,7 @@ func (h *Handler) UpdateUH(c *gin.Context) {
 		})
 		return
 	}
+	body.ID = c.Keys["ID"].(string)
 	id, err := h.db.UpdateUH(body)
 	if err != nil {
 		log.Warning.Println(err)

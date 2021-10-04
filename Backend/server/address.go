@@ -18,8 +18,7 @@ func (h *Handler) InsertAdd(c *gin.Context) {
 		})
 		return
 	}
-	//use params first then next commit maybe change to JWT ID header
-	userid := c.Param("id")
+	userid := c.Keys["ID"].(string)
 	id, err := h.db.InsertAdd(userid, body)
 	if err != nil {
 		log.Warning.Println(err)
@@ -35,14 +34,7 @@ func (h *Handler) InsertAdd(c *gin.Context) {
 }
 
 func (h *Handler) DelAdd(c *gin.Context) {
-	userid := c.Param("id")
-	if !verifyID() {
-		log.Info.Println("Unauthorized Del", userid)
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": "unauthorized",
-		})
-		return
-	}
+	userid := c.Keys["ID"].(string)
 	id, err := h.db.DelAdd(userid)
 	if err != nil {
 		log.Warning.Println(err)
@@ -58,15 +50,7 @@ func (h *Handler) DelAdd(c *gin.Context) {
 }
 
 func (h *Handler) GetAdd(c *gin.Context) {
-	userid := c.Param("id")
-	if !verifyID() {
-		log.Info.Println("Unauthorized Get", userid)
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": "unauthorized",
-		})
-		return
-	}
-	var add models.Address
+	userid := c.Keys["ID"].(string)
 	add, err := h.db.GetAdd(userid)
 	if err != nil {
 		log.Warning.Println(err)
@@ -78,15 +62,20 @@ func (h *Handler) GetAdd(c *gin.Context) {
 	c.JSON(http.StatusOK, add)
 }
 
-func (h *Handler) UpdateAdd(c *gin.Context) {
-	userid := c.Param("id")
-	if !verifyID() {
-		log.Info.Println("Unauthorized Del", userid)
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"status": "unauthorized",
+func (h *Handler) GetMercAdd(c *gin.Context) {
+	id := c.Param("id")
+	add, err := h.db.GetAdd(id)
+	if err != nil {
+		log.Warning.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": "internal server error",
 		})
 		return
 	}
+	c.JSON(http.StatusOK, add)
+}
+
+func (h *Handler) UpdateAdd(c *gin.Context) {
 	var body models.Address
 	err := c.BindJSON(&body)
 	if err != nil {
@@ -96,6 +85,7 @@ func (h *Handler) UpdateAdd(c *gin.Context) {
 		})
 		return
 	}
+	body.ID = c.Keys["ID"].(string)
 	id, err := h.db.UpdateAdd(body)
 	if err != nil {
 		log.Warning.Println(err)

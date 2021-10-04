@@ -52,8 +52,6 @@ type CartItem struct { //need getall
 	Track
 }
 
-//Program only until Cart
-
 // type Order struct { //need getall
 // 	ID     string `json:"order_id"`
 // 	UserID string `json:"user_id"` //ref user.id
@@ -68,7 +66,3 @@ type CartItem struct { //need getall
 // 	Remarks string `json:"remarks"`
 // 	Track
 // }
-
-type OtherRes struct {
-	Msg string `json:"msg"`
-}

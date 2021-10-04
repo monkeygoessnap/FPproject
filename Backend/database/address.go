@@ -44,6 +44,7 @@ func (d *Database) DelAdd(id string) (string, error) {
 func (d *Database) UpdateAdd(add models.Address) (string, error) {
 	res, err := d.db.Exec("UPDATE address SET postal=?, floor=?, unit=?, updated=? WHERE id=?",
 		add.Postal, add.Floor, add.Unit, time.Now(), add.ID)
+
 	if err != nil {
 		log.Warning.Println(err)
 		return "", err

@@ -44,6 +44,7 @@ func (d *Database) DelUH(id string) (string, error) {
 func (d *Database) UpdateUH(h models.UserHealth) (string, error) {
 	res, err := d.db.Exec("UPDATE userhealth SET gender=?, height=?, weight=?, dob=?, active=?, target=?, updated=? WHERE id=?",
 		h.Gender, h.Height, h.Weight, h.DOB, h.Active, h.Target, time.Now(), h.ID)
+
 	if err != nil {
 		log.Warning.Println(err)
 		return "", err
