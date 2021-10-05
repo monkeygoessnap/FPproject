@@ -10,8 +10,8 @@ import (
 
 func (d *Database) InsertFood(f models.Food) (string, error) {
 	id := uuid.New().String()
-	res, err := d.db.Exec("INSERT INTO food(id, merchant_id, name, price, status, description, imglink, created, updated) VALUES(?,?,?,?,?,?,?,?,?)",
-		id, f.MerchantID, f.Name, f.Price, f.Status, f.Description, f.ImgLink, time.Now(), time.Now())
+	res, err := d.db.Exec("INSERT INTO food(id, merchant_id, name, price, status, description, imglink, calories, created, updated) VALUES(?,?,?,?,?,?,?,?,?)",
+		id, f.MerchantID, f.Name, f.Price, f.Status, f.Description, f.ImgLink, f.Calories, time.Now(), time.Now())
 	if err != nil {
 		log.Warning.Println(err)
 		return "", err
@@ -45,8 +45,8 @@ func (d *Database) DelFood(id string) (string, error) {
 }
 
 func (d *Database) UpdateFood(f models.Food) (string, error) {
-	res, err := d.db.Exec("UPDATE food SET name=?, price=?, status=?, description=?, imglink=?, updated=? WHERE id=?",
-		f.Name, f.Price, f.Status, f.Description, f.ImgLink, time.Now(), f.ID)
+	res, err := d.db.Exec("UPDATE food SET name=?, price=?, status=?, description=?, imglink=?, calories=?,updated=? WHERE id=?",
+		f.Name, f.Price, f.Status, f.Description, f.ImgLink, f.Calories, time.Now(), f.ID)
 	if err != nil {
 		log.Warning.Println(err)
 		return "", err
@@ -65,7 +65,7 @@ func (d *Database) UpdateFood(f models.Food) (string, error) {
 func (d *Database) GetFood(id string) (models.Food, error) {
 	var f models.Food
 	err := d.db.QueryRow("SELECT * FROM food WHERE id=?", id).Scan(&f.ID,
-		&f.MerchantID, &f.Name, &f.Price, &f.Status, &f.Description, &f.ImgLink, &f.Created, &f.Updated)
+		&f.MerchantID, &f.Name, &f.Price, &f.Status, &f.Description, &f.ImgLink, &f.Calories, &f.Created, &f.Updated)
 	if err != nil {
 		log.Warning.Println(err)
 		return f, err
@@ -82,7 +82,7 @@ func (d *Database) GetFoodByMerchant(id string) ([]models.Food, error) {
 		return nil, err
 	}
 	for r.Next() {
-		if err := r.Scan(&food.ID, &food.MerchantID, &food.Name, &food.Price, &food.Status, &food.Description, &food.ImgLink, &food.Created, &food.Updated); err != nil {
+		if err := r.Scan(&food.ID, &food.MerchantID, &food.Name, &food.Price, &food.Status, &food.Description, &food.ImgLink, &food.Calories, &food.Created, &food.Updated); err != nil {
 			log.Warning.Println(err)
 			return nil, err
 		}

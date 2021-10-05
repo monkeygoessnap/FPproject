@@ -7,8 +7,8 @@ import (
 )
 
 func (d *Database) InsertCI(ci models.CartItem) (string, error) {
-	res, err := d.db.Exec("INSERT INTO cart_item(item_id, user_id, qty, remarks, created, updated) VALUES(?,?,?,?,?,?)",
-		ci.ID, ci.UserID, ci.Qty, ci.Remarks, time.Now(), time.Now())
+	res, err := d.db.Exec("INSERT INTO cart_item(item_id, user_id, qty, remarks, created, updated) VALUES(?,?,?,?,?,?) ON DUPLICATE KEY UPDATE qty=qty+?",
+		ci.ID, ci.UserID, ci.Qty, ci.Remarks, time.Now(), time.Now(), ci.Qty)
 	if err != nil {
 		log.Warning.Println(err)
 		return "", err

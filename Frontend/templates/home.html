@@ -14,13 +14,15 @@
             Health conditions not set<br>
             <a href="/editprofile">Set here!</a><br>
             {{else}}
+            <h4 style="color:darkcyan">Health Measurements</h4><hr>
             Gender: {{$uh.Gender}}<br>
-            Height: {{$uh.Height}}<br>
-            Weight: {{$uh.Weight}}<br>
+            Height: {{printf "%.1f cm" $uh.Height}}<br>
+            Weight: {{printf "%.1f kg" $uh.Weight}}<br>
+            Age: {{printf "%v years old" $cal.Age}}<br>
             Activeness: {{$uh.Active}}<br>
-            Weight Goal: {{$uh.Target}}<br>
-            BMI: {{$cal.BMI | printf "%.2f"}}<br>
-            Age: {{$cal.Age}}<br>
+            <hr>
+            Weight Goal: {{printf "%s weight" $uh.Target}}<br>
+            BMI: {{printf "%.2f" $cal.BMI}}<br>
             Calories Target : {{$cal.Calories}}<br>
             {{end}}
             {{end}}
@@ -28,8 +30,6 @@
             Current Login: {{.Setting.CurrLogin}} -->
             <hr>
         </p>
-            <!-- <a href="/addinv" class="btn btn-warning" style="text-align:center">
-                <i class="far fa-plus-square fa-4x"></i><br>Add Inventory</a> -->
 
     </div>
 </div>

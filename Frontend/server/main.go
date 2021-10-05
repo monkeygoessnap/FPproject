@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"html/template"
 	"net/http"
+	"strconv"
 )
 
 var tpl *template.Template
@@ -15,6 +16,7 @@ func Run() {
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 
+	http.HandleFunc("/healthcheck", healthCheck)
 	http.HandleFunc("/", index)
 	http.HandleFunc("/home", home)
 	http.HandleFunc("/login", login)
@@ -25,9 +27,84 @@ func Run() {
 	http.HandleFunc("/editprofile", editprofile)
 	http.HandleFunc("/browse", browse)
 	http.HandleFunc("/browse/res", res)
+	http.HandleFunc("/cart", cart)
 
 	log.Info.Println("Frontend running at :8181")
 	log.Error.Println(http.ListenAndServe(":8181", nil))
+}
+
+func cart(w http.ResponseWriter, r *http.Request) {
+
+	var tpldata []interface{}
+	var cart []models.CartItem
+	data, status := newRequest(r, http.MethodGet, "/allci", nil)
+	if status != 200 {
+		tpl.ExecuteTemplate(w, "err.html", nil)
+		return
+	}
+	json.Unmarshal(data, &cart)
+	var foods []models.Food
+	for _, v := range cart {
+		var food models.Food
+		fooddata, _ := newRequest(r, http.MethodGet, "/food/"+v.ID, nil)
+		json.Unmarshal(fooddata, &food)
+		foods = append(foods, food)
+	}
+	var uh models.UserHealth
+	data, _ = newRequest(r, http.MethodGet, "/uh", nil)
+	json.Unmarshal(data, &uh)
+
+	calData := tCal(cart, foods, uh)
+	tpldata = append(tpldata, cart, foods, calData)
+	tpl.ExecuteTemplate(w, "cart.html", tpldata)
+}
+
+type Tcal struct {
+	Cal    int
+	UCal   int
+	Target string
+	Msg    string
+	Color  string
+}
+
+func tCal(carts []models.CartItem, foods []models.Food, uh models.UserHealth) Tcal {
+	var cl Tcal
+	for i, v := range foods {
+		cl.Cal = (v.Calories * carts[i].Qty) + cl.Cal
+	}
+	userCal := calories(uh.Gender, uh.DOB, uh.Active, uh.Height, uh.Weight)
+	switch uh.Target {
+	case "lose":
+		if cl.Cal > userCal {
+			cl.Msg = "Calories exceeded!"
+			cl.Color = "red"
+		} else {
+			cl.Msg = "Within calories goal"
+			cl.Color = "green"
+		}
+	case "gain":
+		if cl.Cal > userCal {
+			cl.Msg = "Calories goal achieved!"
+			cl.Color = "green"
+		} else {
+			cl.Msg = "Calories goal not achieved yet"
+			cl.Color = "yellow"
+		}
+	case "maintain":
+		if cl.Cal > int((float32(userCal) * 1.05)) {
+			cl.Msg = "Calories exceeded!"
+			cl.Color = "red"
+		} else if cl.Cal < int((float32(userCal) * 1.05)) {
+			cl.Msg = "Calories goal not achieved yet"
+			cl.Color = "yellow"
+		} else {
+			cl.Msg = "Calories goal achieved!"
+			cl.Color = "green"
+		}
+	}
+	cl.UCal = userCal
+	cl.Target = uh.Target
+	return cl
 }
 
 func res(w http.ResponseWriter, r *http.Request) {
@@ -42,6 +119,25 @@ func res(w http.ResponseWriter, r *http.Request) {
 	data, _ = newRequest(r, http.MethodGet, "/allfood/"+id, nil)
 	json.Unmarshal(data, &foods)
 	tpldata = append(tpldata, name, add, foods)
+
+	// var ci []models.CartItem
+	// data, _ = newRequest(r, http.MethodGet, "/allci", nil)
+
+	if r.Method == http.MethodPost {
+		id := r.FormValue("add")
+		qty, _ := strconv.Atoi(r.FormValue(id))
+		new := models.CartItem{
+			ID:  id,
+			Qty: qty,
+		}
+		_, status := newRequest(r, http.MethodPost, "/ci", new)
+		if status != 200 {
+			tpl.ExecuteTemplate(w, "err.html", nil)
+			return
+		}
+		http.Redirect(w, r, r.Header.Get("Referer"), http.StatusSeeOther)
+		return
+	}
 
 	tpl.ExecuteTemplate(w, "res.html", tpldata)
 }
@@ -60,9 +156,12 @@ func browse(w http.ResponseWriter, r *http.Request) {
 	tpl.ExecuteTemplate(w, "browse.html", mercs)
 }
 
-func healthCheck() {
-	_, status := newRequest(nil, http.MethodGet, "/healthcheck", nil)
+func healthCheck(w http.ResponseWriter, r *http.Request) {
+
+	_, status := newRequest(r, http.MethodGet, "/healthcheck", nil)
+
 	log.Info.Println("Healthcheck code: %v", status)
+	tpl.ExecuteTemplate(w, "healthcheck.html", status)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {

@@ -41,6 +41,7 @@ type Food struct { //need getall
 	Status      string  `json:"status"` //enum avail, soldout
 	Description string  `json:"description"`
 	ImgLink     string  `json:"imglink"` //image url
+	Calories    int     `json:"calories"`
 	Track
 }
 

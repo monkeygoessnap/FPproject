@@ -43,13 +43,14 @@ CREATE TABLE IF NOT EXISTS `food` (
   `status` varchar(10),
   `description` varchar(255),
   `imglink` varchar(255),
+  `calories` int,
   `created` datetime,
   `updated` datetime,
   FOREIGN KEY (`merchant_id`) REFERENCES `user` (`id`)
 );
 
 CREATE TABLE IF NOT EXISTS `cart_item` (
-  `item_id` varchar(36) PRIMARY KEY,
+  `item_id` varchar(36) UNIQUE,
   `user_id` varchar(36),
   `qty` int,
   `remarks` varchar(255),

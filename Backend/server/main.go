@@ -112,7 +112,7 @@ func InitServer() {
 	private.DELETE("/ci/:id", h.DelCI)
 	private.GET("/ci/:id", h.GetCI)
 	private.PUT("/ci/:id", h.UpdateCI)
-	private.GET("/allci/:id", h.GetCIByUser)
+	private.GET("/allci", h.GetCIByUser)
 
 	router.Run()
 }

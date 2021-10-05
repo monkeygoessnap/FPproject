@@ -18,6 +18,7 @@ func (h *Handler) InsertCI(c *gin.Context) {
 		})
 		return
 	}
+	body.UserID = c.Keys["ID"].(string)
 	id, err := h.db.InsertCI(body)
 	if err != nil {
 		log.Warning.Println(err)
@@ -63,7 +64,8 @@ func (h *Handler) GetCI(c *gin.Context) {
 }
 
 func (h *Handler) GetCIByUser(c *gin.Context) {
-	userid := c.Param("id")
+
+	userid := c.Keys["ID"].(string)
 	var body []models.CartItem
 	body, err := h.db.GetCIByUser(userid)
 	if err != nil {

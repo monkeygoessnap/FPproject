@@ -1,0 +1,63 @@
+{{template "head"}}
+{{template "navbar_user"}}
+{{template "body"}}
+
+<div text-align="center">
+    <h2 style="color:darkcyan">Cart</h2>
+    {{$carts := index . 0}}
+    {{$data := index . 2}}
+    
+    Total Calories: {{$data.Cal}}<br>
+    Target Calories: {{$data.UCal}}<br>
+    Goal: {{$data.Target}}<br>
+    <p style={{printf "color:%s" $data.Color}}>{{$data.Msg}}</p><br>
+    <button class="btn btn-info" type="submit" value="" name="submit">Submit Order</button>
+</div>
+<hr>
+
+<table class="table table-hover" id="myTable">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">Name</th>
+        <th scope="col">Price (Per Qty)</th>
+        <th scope="col">Description</th>
+        <th scope="col">Calories (Per Qty)</th>
+        <th scope="col">Qty</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+        {{range $food := index . 1}}
+        <tr>
+            <td><img src={{printf "/static/images/food/%s" $food.ImgLink}} id="navlogo"></th>
+            <td>{{$food.Name}}</td>
+            <td>{{$food.Price | printf "$%.2f"}}</td>
+            <td>{{$food.Description}}</td>
+            <td>{{$food.Calories}}</td>
+            <td>                    
+              <form method="POST">
+                  {{range $k := $carts}}
+                  <!-- {{if eq $k.ID $food.ID}} -->
+                  <input autocomplete="off" name={{$food.ID}} placeholder="Qty" type="number" pattern="^[0-9]+$" title="Only numbers allowed" min="1" required value={{$k.Qty}}>
+                  <!-- {{end}} -->
+                  {{end}}
+            </td>
+            <td>
+                        <button style="color:white;background-color:darkcyan;border-radius:5px;border-color:white;"class="fas fa-pencil-alt" type="submit" value={{$food.ID}} name="edit"></button>
+                        <button style="color:white;background-color:red;border-radius:5px;border-color:white;"class="far fa-trash-alt" type="submit" value={{$food.ID}} name="delete"></button>
+                    </form>
+                </form>
+            </td>
+        </tr>
+        {{end}}
+    </tbody>
+  </table>
+
+
+
+</div>
+
+{{template "footer"}}
