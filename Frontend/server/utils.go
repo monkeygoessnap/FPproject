@@ -2,6 +2,7 @@ package server
 
 import (
 	"FPproject/Frontend/log"
+	"FPproject/Frontend/models"
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
@@ -125,4 +126,52 @@ func calories(gender, dob, active string, height, weight float32) int {
 		return 0
 	}
 	return 0
+}
+
+type Tcal struct {
+	Cal    int
+	UCal   int
+	Target string
+	Msg    string
+	Color  string
+}
+
+func tCal(carts []models.CartItem, foods []models.Food, uh models.UserHealth) Tcal {
+	var cl Tcal
+	for i, v := range foods {
+		cl.Cal = (v.Calories * carts[i].Qty) + cl.Cal
+	}
+	userCal := calories(uh.Gender, uh.DOB, uh.Active, uh.Height, uh.Weight)
+	switch uh.Target {
+	case "lose":
+		if cl.Cal > userCal {
+			cl.Msg = "Calories exceeded!"
+			cl.Color = "red"
+		} else {
+			cl.Msg = "Within calories goal"
+			cl.Color = "green"
+		}
+	case "gain":
+		if cl.Cal > userCal {
+			cl.Msg = "Calories goal achieved!"
+			cl.Color = "green"
+		} else {
+			cl.Msg = "Calories goal not achieved yet"
+			cl.Color = "yellow"
+		}
+	case "maintain":
+		if cl.Cal > int((float32(userCal) * 1.05)) {
+			cl.Msg = "Calories exceeded!"
+			cl.Color = "red"
+		} else if cl.Cal < int((float32(userCal) * 1.05)) {
+			cl.Msg = "Calories goal not achieved yet"
+			cl.Color = "yellow"
+		} else {
+			cl.Msg = "Calories goal achieved!"
+			cl.Color = "green"
+		}
+	}
+	cl.UCal = userCal
+	cl.Target = uh.Target
+	return cl
 }
