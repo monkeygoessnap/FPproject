@@ -24,8 +24,25 @@ func (d *Database) InsertCI(ci models.CartItem) (string, error) {
 	return ci.ID, nil
 }
 
-func (d *Database) DelCI(id string) (string, error) {
-	res, err := d.db.Exec("DELETE FROM cart_item WHERE item_id=?", id)
+func (d *Database) DelCI(id, userid string) (string, error) {
+	res, err := d.db.Exec("DELETE FROM cart_item WHERE item_id=? AND user_id=?", id, userid)
+	if err != nil {
+		log.Warning.Println(err)
+		return "", err
+	}
+	affected, err := res.RowsAffected()
+	if err != nil {
+		log.Warning.Println(err)
+		return "", err
+	} else if affected < 1 {
+		log.Warning.Println(ErrNoRowsAffected)
+		return "", ErrNoRowsAffected
+	}
+	return id, nil
+}
+
+func (d *Database) DelAllCI(id string) (string, error) {
+	res, err := d.db.Exec("DELETE FROM cart_item WHERE user_id=?", id)
 	if err != nil {
 		log.Warning.Println(err)
 		return "", err
@@ -42,8 +59,8 @@ func (d *Database) DelCI(id string) (string, error) {
 }
 
 func (d *Database) UpdateCI(ci models.CartItem) (string, error) {
-	res, err := d.db.Exec("UPDATE cart_item SET qty=?, remarks=?, updated=? WHERE item_id=?",
-		ci.Qty, ci.Remarks, time.Now(), ci.ID)
+	res, err := d.db.Exec("UPDATE cart_item SET qty=?, remarks=?, updated=? WHERE item_id=? AND user_id=?",
+		ci.Qty, ci.Remarks, time.Now(), ci.ID, ci.UserID)
 	if err != nil {
 		log.Warning.Println(err)
 		return "", err

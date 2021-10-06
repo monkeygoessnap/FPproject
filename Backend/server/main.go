@@ -35,10 +35,11 @@ type repository interface {
 	GetFoodByMerchant(id string) ([]models.Food, error)
 
 	InsertCI(ci models.CartItem) (string, error)
-	DelCI(id string) (string, error)
+	DelCI(id, userid string) (string, error)
 	UpdateCI(f models.CartItem) (string, error)
 	GetCI(id string) (models.CartItem, error)
 	GetCIByUser(id string) ([]models.CartItem, error)
+	DelAllCI(id string) (string, error)
 }
 
 //type logger interface{
@@ -111,8 +112,9 @@ func InitServer() {
 	private.POST("/ci", h.InsertCI)
 	private.DELETE("/ci/:id", h.DelCI)
 	private.GET("/ci/:id", h.GetCI)
-	private.PUT("/ci/:id", h.UpdateCI)
+	private.PUT("/ci", h.UpdateCI)
 	private.GET("/allci", h.GetCIByUser)
+	private.DELETE("/ci", h.DelAllCI)
 
 	router.Run()
 }

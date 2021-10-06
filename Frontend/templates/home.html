@@ -14,7 +14,7 @@
             Health conditions not set<br>
             <a href="/editprofile">Set here!</a><br>
             {{else}}
-            <h4 style="color:darkcyan">Health Measurements</h4><hr>
+            <h4 style="color:darkcyan">Health Summary</h4><hr>
             Gender: {{$uh.Gender}}<br>
             Height: {{printf "%.1f cm" $uh.Height}}<br>
             Weight: {{printf "%.1f kg" $uh.Weight}}<br>
@@ -23,6 +23,14 @@
             <hr>
             Weight Goal: {{printf "%s weight" $uh.Target}}<br>
             BMI: {{printf "%.2f" $cal.BMI}}<br>
+            {{if lt $cal.BMI 18.5}}
+            <div style="background-color:rgb(255, 166, 166)">Underweight</div><br>
+            {{else if gt $cal.BMI 24.9}}
+            <div style="background-color:rgb(255, 166, 166)">Overweight</div><br>
+            {{else}}
+            <div style="background-color:rgb(158, 255, 158)">Normal BMI</div><br>
+            {{end}}
+
             Calories Target : {{$cal.Calories}}<br>
             {{end}}
             {{end}}

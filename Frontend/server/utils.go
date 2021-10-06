@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/jasonwinn/geocoder"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -174,4 +175,19 @@ func tCal(carts []models.CartItem, foods []models.Food, uh models.UserHealth) Tc
 	cl.UCal = userCal
 	cl.Target = uh.Target
 	return cl
+}
+
+func distCal(from string, to string) (float32, float32) {
+
+	//https://www.healthline.com/nutrition/can-you-lose-weight-by-walking-an-hour-a-day#calories-burned
+	//average walking pace of 3mph/4.8kph
+	//average calories burnt per hour == 193, calories burnt per km == 40.21
+
+	directions := geocoder.NewDirections(from+" SG", []string{to + " SG"})
+	distance, err := directions.Distance("k")
+	if err != nil {
+		return 0, 0
+	}
+	calBurnt := float32(distance * 40.21)
+	return float32(distance), calBurnt
 }

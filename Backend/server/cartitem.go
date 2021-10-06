@@ -35,7 +35,24 @@ func (h *Handler) InsertCI(c *gin.Context) {
 
 func (h *Handler) DelCI(c *gin.Context) {
 	foodid := c.Param("id")
-	id, err := h.db.DelCI(foodid)
+	userID := c.Keys["ID"].(string)
+	id, err := h.db.DelCI(foodid, userID)
+	if err != nil {
+		log.Warning.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"status": "internal server error",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status": "OK",
+		"id":     id,
+	})
+}
+
+func (h *Handler) DelAllCI(c *gin.Context) {
+	userID := c.Keys["ID"].(string)
+	id, err := h.db.DelAllCI(userID)
 	if err != nil {
 		log.Warning.Println(err)
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -88,6 +105,7 @@ func (h *Handler) UpdateCI(c *gin.Context) {
 		})
 		return
 	}
+	body.UserID = c.Keys["ID"].(string)
 	id, err := h.db.UpdateCI(body)
 	if err != nil {
 		log.Warning.Println(err)

@@ -32,13 +32,15 @@
 <div text-align="center">
     {{$merc := index . 0}}
     {{$add := index . 1}}
+    {{$dist := index . 3}}
 
     <h2 style="color:darkcyan">{{$merc}}</h2>
     <h4 style="color:darkcyan">Address</h4>
     Postal: {{$add.Postal}}<br>
     Floor: {{$add.Floor}}<br>
     Unit: {{$add.Unit}}<br>
-
+    Distance away: {{index $dist "distance"}}<br>
+    <div style="background-color:lightgreen">Calories burnt from self pick-up: {{index $dist "cal"}}</div><br>
     <i class="fas fa-search"></i><input style="width:100%;text-align:center" type="text" id="myInput" onkeyup="searchFunc()" placeholder="Search">
 
     <table class="table table-hover" id="myTable">
