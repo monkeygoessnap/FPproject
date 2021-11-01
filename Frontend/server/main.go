@@ -1,3 +1,6 @@
+/*
+Package server provides the router functions
+*/
 package server
 
 import (

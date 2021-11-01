@@ -1,3 +1,6 @@
+/*
+Package database provides CRUD functions with mysql database
+*/
 package database
 
 import (

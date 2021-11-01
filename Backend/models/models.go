@@ -1,3 +1,6 @@
+/*
+Package models provides the models for the app
+*/
 package models
 
 type Track struct {
