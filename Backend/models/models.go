@@ -52,18 +52,3 @@ type CartItem struct { //need getall
 	Remarks string `json:"remarks"`
 	Track
 }
-
-// type Order struct { //need getall
-// 	ID     string `json:"order_id"`
-// 	UserID string `json:"user_id"` //ref user.id
-// 	Status string `json:"status"`  //enum completed, pending
-// 	Track
-// }
-
-// type OrderItem struct { //need getall
-// 	Food
-// 	OrderID string `json:"order_id"` //ref order_id
-// 	Qty     int `json:"qty"`
-// 	Remarks string `json:"remarks"`
-// 	Track
-// }

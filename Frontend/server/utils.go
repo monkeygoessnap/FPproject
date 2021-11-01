@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -24,11 +25,13 @@ func getToken(r *http.Request) string {
 }
 
 func newRequest(req *http.Request, method, url string, jsonD interface{}) ([]byte, int) {
-	base := "http://localhost:8080/api/v1"
+	base := "https://localhost:8080/api/v1"
 	jsonV, _ := json.Marshal(jsonD)
 	client := &http.Client{
 		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{},
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
 		},
 	}
 	r, _ := http.NewRequest(method, base+url, bytes.NewBuffer(jsonV))
@@ -104,6 +107,7 @@ func calories(gender, dob, active string, height, weight float32) int {
 	high = 1.9 x BMR (training 2 or more times a day)
 	*/
 	//Using Harris-Benedict Formula
+
 	age := float32(ageCal(dob))
 	var mul float32
 	switch active {
@@ -177,13 +181,40 @@ func tCal(carts []models.CartItem, foods []models.Food, uh models.UserHealth) Tc
 	return cl
 }
 
+type addDetails struct {
+	Results []map[string]string `json:"results"`
+}
+
+func getCoord(postal string) string {
+
+	var data addDetails
+	client := &http.Client{}
+	api := fmt.Sprintf("https://developers.onemap.sg/commonapi/search?searchVal=%s&returnGeom=Y&getAddrDetails=Y&pageNum=1", postal)
+	req, _ := http.NewRequest(http.MethodGet, api, nil)
+	resp, err := client.Do(req)
+	if err != nil {
+		return ""
+	}
+	body, _ := ioutil.ReadAll(resp.Body)
+	defer resp.Body.Close()
+	json.Unmarshal(body, &data)
+	if len(data.Results) == 0 {
+		return ""
+	}
+	return data.Results[0]["LATITUDE"] + ", " + data.Results[0]["LONGITUDE"]
+
+}
+
 func distCal(from string, to string) (float32, float32) {
 
 	//https://www.healthline.com/nutrition/can-you-lose-weight-by-walking-an-hour-a-day#calories-burned
 	//average walking pace of 3mph/4.8kph
 	//average calories burnt per hour == 193, calories burnt per km == 40.21
 
-	directions := geocoder.NewDirections(from+" SG", []string{to + " SG"})
+	c1 := getCoord(from)
+	c2 := getCoord(to)
+
+	directions := geocoder.NewDirections(c1, []string{c2})
 	distance, err := directions.Distance("k")
 	if err != nil {
 		return 0, 0

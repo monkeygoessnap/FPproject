@@ -27,7 +27,7 @@ func Run() {
 	http.HandleFunc("/cart", cart)
 
 	log.Info.Println("Frontend running at :8181")
-	log.Error.Println(http.ListenAndServe(":8181", nil))
+	log.Error.Println(http.ListenAndServeTLS(":8181", "certs/cert.pem", "certs/key.pem", nil))
 }
 
 func healthCheck(w http.ResponseWriter, r *http.Request) {

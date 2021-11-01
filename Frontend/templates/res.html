@@ -39,8 +39,8 @@
     Postal: {{$add.Postal}}<br>
     Floor: {{$add.Floor}}<br>
     Unit: {{$add.Unit}}<br>
-    Distance away: {{index $dist "distance"}}<br>
-    <div style="background-color:lightgreen">Calories burnt from self pick-up: {{index $dist "cal"}}</div><br>
+    Distance away: {{index $dist "distance" | printf "%.2f km"}}<br>
+    <div style="background-color:lightgreen">Calories burnt from self pick-up (walking): {{index $dist "cal" | printf "%.2f Cal"}}</div><br>
     <i class="fas fa-search"></i><input style="width:100%;text-align:center" type="text" id="myInput" onkeyup="searchFunc()" placeholder="Search">
 
     <table class="table table-hover" id="myTable">

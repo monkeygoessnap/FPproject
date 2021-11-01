@@ -42,20 +42,14 @@ type repository interface {
 	DelAllCI(id string) (string, error)
 }
 
-//type logger interface{
-//log function
-//}
-
 type Handler struct {
 	db repository
-	//log logger
 }
 
 //passes dependency
 func handler(db repository) *Handler {
 	return &Handler{
 		db: db,
-		//log:logger
 	}
 }
 
@@ -116,5 +110,7 @@ func InitServer() {
 	private.GET("/allci", h.GetCIByUser)
 	private.DELETE("/ci", h.DelAllCI)
 
-	router.Run()
+	//log.Error.Fatal(http.ListenAndServeTLS(":8080", "certs/cert.pem", "certs/key.pem", router))
+	router.RunTLS(":8080", "certs/cert.pem", "certs/key.pem")
+	//router.Run()
 }

@@ -3,7 +3,6 @@ package server
 import (
 	"FPproject/Frontend/models"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 )
@@ -83,7 +82,6 @@ func res(w http.ResponseWriter, r *http.Request) {
 	var uadd models.Address
 	udata, _ := newRequest(r, http.MethodGet, "/add", nil)
 	json.Unmarshal(udata, &uadd)
-	fmt.Println(uadd.Postal, add.Postal)
 	dist, cal := distCal(uadd.Postal, add.Postal)
 	dc := map[string]float32{
 		"distance": dist,
